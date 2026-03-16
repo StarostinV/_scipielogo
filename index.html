@@ -677,9 +677,25 @@
     orbitEl.setAttribute('stroke-width', e.target.value);
   });
 
-  // Copy palette as JSON string
-  copyBtn.addEventListener('click', () => {
-    const palette = {
+  // ── Apply a palette object to all controls and visuals ──
+  function applyPalette(p) {
+    if (p.bg) { pickBg.value = p.bg; document.documentElement.style.setProperty('--bg', p.bg); }
+    if (p.pie) { pickPie.value = p.pie; pieFill = p.pie; applyGreyPieces(); }
+    if (p.border) { pickBorder.value = p.border; borderColor = p.border; applyGreyPieces(); }
+    if (p.borderOn !== undefined) { bordersOn = p.borderOn; borderToggle.textContent = bordersOn ? 'ON' : 'OFF'; borderToggle.classList.toggle('active', bordersOn); applyGreyPieces(); }
+    if (p.accent) { pickAccent.value = p.accent; accentPieces.forEach(el => { el.setAttribute('fill', p.accent); el.setAttribute('stroke', p.accent); }); }
+    if (p.suns) { pickSuns.value = p.suns; sunColor = p.suns; window.__sunColor = sunColor; lightGrads.forEach(g => { if(g){ g.children[0].setAttribute('stop-color',sunColor); g.children[1].setAttribute('stop-color',sunColor); }}); }
+    if (p.text) { pickText.value = p.text; wordmark.setAttribute('fill', p.text); }
+    if (p.reflection !== undefined) { reflectionSlider.value = p.reflection; window.__reflectionIntensity = p.reflection / 100; }
+    if (p.trails !== undefined) { window.__trailsEnabled = p.trails; trailsToggle.textContent = p.trails ? 'ON' : 'OFF'; trailsToggle.classList.toggle('active', p.trails); }
+    if (p.orbitOn !== undefined) { orbitOn = p.orbitOn; orbitToggle.textContent = orbitOn ? 'ON' : 'OFF'; orbitToggle.classList.toggle('active', orbitOn); orbitEl.setAttribute('opacity', orbitOn ? '0.25' : '0'); }
+    if (p.orbitColor) { pickOrbit.value = p.orbitColor; orbitEl.setAttribute('stroke', p.orbitColor); }
+    if (p.orbitWidth !== undefined) { orbitWidthSlider.value = p.orbitWidth; orbitEl.setAttribute('stroke-width', p.orbitWidth); }
+  }
+
+  // ── Get current palette as object ──
+  function getCurrentPalette() {
+    return {
       bg: pickBg.value,
       pie: pickPie.value,
       border: pickBorder.value,
@@ -693,8 +709,38 @@
       orbitColor: pickOrbit.value,
       orbitWidth: parseInt(orbitWidthSlider.value)
     };
-    const str = JSON.stringify(palette);
-    navigator.clipboard.writeText(str).then(() => {
+  }
+
+  // ── Update URL hash on every change ──
+  function updateHash() {
+    const json = JSON.stringify(getCurrentPalette());
+    history.replaceState(null, '', '#' + encodeURIComponent(json));
+  }
+
+  // Listen to all controls for hash updates
+  [pickBg, pickPie, pickBorder, pickAccent, pickSuns, pickText, reflectionSlider, orbitWidthSlider].forEach(el => {
+    el.addEventListener('input', updateHash);
+  });
+  [borderToggle, trailsToggle, orbitToggle].forEach(el => {
+    el.addEventListener('click', () => setTimeout(updateHash, 0));
+  });
+
+  // ── Load from URL hash on page load ──
+  if (window.location.hash.length > 1) {
+    try {
+      const json = decodeURIComponent(window.location.hash.slice(1));
+      const p = JSON.parse(json);
+      applyPalette(p);
+    } catch(e) { /* ignore bad hash */ }
+  }
+
+  // Copy palette — copies both JSON and shareable URL
+  copyBtn.addEventListener('click', () => {
+    const palette = getCurrentPalette();
+    const json = JSON.stringify(palette);
+    const url = window.location.origin + window.location.pathname + '#' + encodeURIComponent(json);
+    const text = json + '\n' + url;
+    navigator.clipboard.writeText(text).then(() => {
       copyBtn.textContent = '✓ Copied';
       copyBtn.classList.add('copied');
       setTimeout(() => { copyBtn.textContent = '📋 Copy'; copyBtn.classList.remove('copied'); }, 1500);
@@ -705,21 +751,11 @@
   loadBtn.addEventListener('click', async () => {
     try {
       const str = await navigator.clipboard.readText();
-      const p = JSON.parse(str);
-
-      if (p.bg) { pickBg.value = p.bg; pickBg.dispatchEvent(new Event('input')); }
-      if (p.pie) { pickPie.value = p.pie; pieFill = p.pie; applyGreyPieces(); }
-      if (p.border) { pickBorder.value = p.border; borderColor = p.border; applyGreyPieces(); }
-      if (p.borderOn !== undefined) { bordersOn = p.borderOn; borderToggle.textContent = bordersOn ? 'ON' : 'OFF'; borderToggle.classList.toggle('active', bordersOn); applyGreyPieces(); }
-      if (p.accent) { pickAccent.value = p.accent; accentPieces.forEach(el => { el.setAttribute('fill', p.accent); el.setAttribute('stroke', p.accent); }); }
-      if (p.suns) { pickSuns.value = p.suns; sunColor = p.suns; window.__sunColor = sunColor; lightGrads.forEach(g => { if(g){ g.children[0].setAttribute('stop-color',sunColor); g.children[1].setAttribute('stop-color',sunColor); }}); }
-      if (p.text) { pickText.value = p.text; wordmark.setAttribute('fill', p.text); }
-      if (p.reflection !== undefined) { reflectionSlider.value = p.reflection; window.__reflectionIntensity = p.reflection / 100; }
-      if (p.trails !== undefined) { window.__trailsEnabled = p.trails; trailsToggle.textContent = p.trails ? 'ON' : 'OFF'; trailsToggle.classList.toggle('active', p.trails); }
-      if (p.orbitOn !== undefined) { orbitOn = p.orbitOn; orbitToggle.textContent = orbitOn ? 'ON' : 'OFF'; orbitToggle.classList.toggle('active', orbitOn); orbitEl.setAttribute('opacity', orbitOn ? '0.25' : '0'); }
-      if (p.orbitColor) { pickOrbit.value = p.orbitColor; orbitEl.setAttribute('stroke', p.orbitColor); }
-      if (p.orbitWidth !== undefined) { orbitWidthSlider.value = p.orbitWidth; orbitEl.setAttribute('stroke-width', p.orbitWidth); }
-
+      // Try to parse first line as JSON (might have URL on second line)
+      const firstLine = str.trim().split('\n')[0].trim();
+      const p = JSON.parse(firstLine);
+      applyPalette(p);
+      updateHash();
       loadBtn.textContent = '✓ Loaded';
       setTimeout(() => { loadBtn.textContent = '📥 Load'; }, 1500);
     } catch(e) {
