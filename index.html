@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCI-PIE — Animated Logo</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --bg: #1a1a1e; }
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: var(--bg);
+    overflow: hidden;
+    font-family: sans-serif;
+  }
+
+  .logo-wrap {
+    width: 100%;
+    max-width: 650px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    opacity: 0;
+    animation: fadeInWrap 1s ease 0.2s forwards;
+  }
+  @keyframes fadeInWrap { to { opacity: 1; } }
+
+  .logo-wrap svg { width: 100%; height: auto; display: block; }
+  .wordmark { width: 100%; }
+
+  /* Cinematic entrance on the <g> elements only */
+  .cake-piece { opacity: 0; cursor: pointer; }
+  .cake-piece[data-piece="tl"] { animation: enterTL 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards; }
+  .cake-piece[data-piece="tr"] { animation: enterTR 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.7s forwards; }
+  .cake-piece[data-piece="bl"] { animation: enterBL 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.9s forwards; }
+  .cake-piece[data-piece="br"] { animation: enterBR 0.9s cubic-bezier(0.16, 1, 0.3, 1) 1.1s forwards; }
+
+  @keyframes enterTL { 0% { opacity:0; transform: translate(-40px,-30px) scale(0.92); } 100% { opacity:1; transform: translate(0,0) scale(1); } }
+  @keyframes enterTR { 0% { opacity:0; transform: translate(40px,-30px) scale(0.92); } 100% { opacity:1; transform: translate(0,0) scale(1); } }
+  @keyframes enterBL { 0% { opacity:0; transform: translate(-40px,30px) scale(0.92); } 100% { opacity:1; transform: translate(0,0) scale(1); } }
+  @keyframes enterBR { 0% { opacity:0; transform: translate(40px,30px) scale(0.92); } 100% { opacity:1; transform: translate(0,0) scale(1); } }
+
+  /* Wordmark */
+  .wordmark path { opacity: 0; animation: wordFade 0.8s ease 1.4s forwards; }
+  @keyframes wordFade { to { opacity: 1; } }
+
+
+</style>
+</head>
+<body>
+<div class="logo-wrap" id="logoWrap">
+  <svg id="logo" viewBox="-50 -50 1370 1070" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <filter id="planetGlow" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur"/>
+        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+      </filter>
+      <!-- Per-piece radial gradient for sun reflection — updated dynamically in JS -->
+      <radialGradient id="light-bl" cx="0.5" cy="0.5" r="0.6" gradientUnits="objectBoundingBox">
+        <stop offset="0%" stop-color="#F0EC8F" stop-opacity="0"/>
+        <stop offset="100%" stop-color="#F0EC8F" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="light-br" cx="0.5" cy="0.5" r="0.6" gradientUnits="objectBoundingBox">
+        <stop offset="0%" stop-color="#F0EC8F" stop-opacity="0"/>
+        <stop offset="100%" stop-color="#F0EC8F" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="light-tl" cx="0.5" cy="0.5" r="0.6" gradientUnits="objectBoundingBox">
+        <stop offset="0%" stop-color="#F0EC8F" stop-opacity="0"/>
+        <stop offset="100%" stop-color="#F0EC8F" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="light-tr" cx="0.5" cy="0.5" r="0.6" gradientUnits="objectBoundingBox">
+        <stop offset="0%" stop-color="#F0EC8F" stop-opacity="0"/>
+        <stop offset="100%" stop-color="#F0EC8F" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+
+    <!-- Back particles + planets -->
+    <g id="back-particles"></g>
+    <g id="back-planets"></g>
+
+    <!-- Bottom cake — solid fill + wireframe stroke + lighting overlay -->
+    <g class="cake-piece" data-piece="bl">
+      <path d="M173.590 355.000 564.000 533.946 416.360 873.000 401.960 866.050C258.430 787.960 161.000 635.641 161.000 460.531 161.000 428.693 164.220 397.609 170.350 367.587Z"
+            fill="#1a1a1e" stroke="#C6CCD2" stroke-width="8" stroke-linejoin="round" fill-rule="evenodd"/>
+      <path d="M173.590 355.000 564.000 533.946 416.360 873.000 401.960 866.050C258.430 787.960 161.000 635.641 161.000 460.531 161.000 428.693 164.220 397.609 170.350 367.587Z"
+            fill="url(#light-bl)" fill-rule="evenodd" pointer-events="none"/>
+    </g>
+    <g class="cake-piece" data-piece="br">
+      <path d="M642.690 572.000 984.000 738.900 972.850 753.750C888.230 855.890 760.170 921.000 616.850 921.000 585.000 921.000 553.900 917.780 523.870 911.660L502.000 906.060Z"
+            fill="#1a1a1e" stroke="#C6CCD2" stroke-width="8" stroke-linejoin="round" fill-rule="evenodd"/>
+      <path d="M642.690 572.000 984.000 738.900 972.850 753.750C888.230 855.890 760.170 921.000 616.850 921.000 585.000 921.000 553.900 917.780 523.870 911.660L502.000 906.060Z"
+            fill="url(#light-br)" fill-rule="evenodd" pointer-events="none"/>
+    </g>
+
+    <!-- Top cake -->
+    <g class="cake-piece" data-piece="tr">
+      <path id="tr-nobite" d="M911.230 0.195 933.570 17.470C1061.890 127.284 1128.400 304.644 1092.070 485.948L1089.200 497.352 624.430 500.991Z"
+            fill="#d4c44a" stroke="#d4c44a" stroke-width="8" stroke-linejoin="round" fill-rule="evenodd"/>
+      <path id="tr-nobite-light" d="M911.230 0.195 933.570 17.470C1061.890 127.284 1128.400 304.644 1092.070 485.948L1089.200 497.352 624.430 500.991Z"
+            fill="url(#light-tr)" fill-rule="evenodd" pointer-events="none"/>
+      <path id="tr-bite" d="M910.970 0.817 933.310 18.092C1061.630 127.905 1128.140 305.265 1091.820 486.570L1088.950 497.974 680.640 501.170 684.710 499.187 667.550 479.761 686.630 464.229 662.360 450.049 684.520 422.970 670.560 420.624Z"
+            fill="#d4c44a" stroke="#d4c44a" stroke-width="8" stroke-linejoin="round" fill-rule="evenodd" style="display:none;"/>
+      <path id="tr-bite-light" d="M910.970 0.817 933.310 18.092C1061.630 127.905 1128.140 305.265 1091.820 486.570L1088.950 497.974 680.640 501.170 684.710 499.187 667.550 479.761 686.630 464.229 662.360 450.049 684.520 422.970 670.560 420.624Z"
+            fill="url(#light-tr)" fill-rule="evenodd" pointer-events="none" style="display:none;"/>
+    </g>
+    <g class="cake-piece" data-piece="tl">
+      <path d="M603.160 2.000C633.610 2.000 663.340 5.188 692.060 11.258L723.000 19.476 578.130 501.000 184.000 316.180 196.710 280.305C263.680 116.757 420.440 2.000 603.160 2.000Z"
+            fill="#1a1a1e" stroke="#C6CCD2" stroke-width="8" stroke-linejoin="round" fill-rule="evenodd"/>
+      <path d="M603.160 2.000C633.610 2.000 663.340 5.188 692.060 11.258L723.000 19.476 578.130 501.000 184.000 316.180 196.710 280.305C263.680 116.757 420.440 2.000 603.160 2.000Z"
+            fill="url(#light-tl)" fill-rule="evenodd" pointer-events="none"/>
+    </g>
+
+    <!-- Front particles + planets (in front of cake) -->
+    <g id="front-particles"></g>
+    <g id="front-planets"></g>
+  </svg>
+
+  <svg class="wordmark" xmlns="http://www.w3.org/2000/svg" viewBox="-2 -74.8 804 78.2">
+    <path d="M42.50 1.40L42.50 1.40Q32.30 1.40 25.10-0.45Q17.90-2.30 13.40-5.50Q8.90-8.70 6.70-12.80Q4.50-16.90 4.20-21.40L4.20-21.40L14.50-21.40Q15.10-18.30 16.85-15.65Q18.60-13 21.85-10.95Q25.10-8.90 30.20-7.75Q35.30-6.60 42.50-6.60L42.50-6.60Q51.10-6.60 56.90-8.05Q62.70-9.50 65.60-12.45Q68.50-15.40 68.50-19.80L68.50-19.80Q68.50-22.50 67.10-24.70Q65.70-26.90 62.55-28.45Q59.40-30 54.10-30.70L54.10-30.70L31.60-33.70Q26.70-34.40 22.20-35.60Q17.70-36.80 14.15-38.95Q10.60-41.10 8.60-44.50Q6.60-47.90 6.60-52.90L6.60-52.90Q6.60-57.50 8.90-61.15Q11.20-64.80 15.65-67.40Q20.10-70 26.60-71.40Q33.10-72.80 41.50-72.80L41.50-72.80Q50.80-72.80 57.25-71.15Q63.70-69.50 67.70-66.60Q71.70-63.70 73.65-60.05Q75.60-56.40 75.80-52.40L75.80-52.40L65.50-52.40Q65-56 62.45-58.80Q59.90-61.60 54.80-63.20Q49.70-64.80 41.30-64.80L41.30-64.80Q33.20-64.80 27.75-63.40Q22.30-62 19.60-59.40Q16.90-56.80 16.90-53.20L16.90-53.20Q16.90-50 18.80-47.80Q20.70-45.60 24.25-44.25Q27.80-42.90 32.90-42.20L32.90-42.20L56.50-39.10Q63.20-38.30 68.20-36.05Q73.20-33.80 76.05-29.95Q78.90-26.10 78.90-20.30L78.90-20.30Q78.90-14.90 76.55-10.85Q74.20-6.80 69.55-4.10Q64.90-1.40 58.15 0Q51.40 1.40 42.50 1.40Z M191 1.40L191 1.40Q177.80 1.40 167.95-3.20Q158.10-7.80 152.65-16.15Q147.20-24.50 147.20-35.70L147.20-35.70Q147.20-41.30 148.60-46.25Q150-51.20 152.65-55.30Q155.30-59.40 159.15-62.65Q163-65.90 167.85-68.15Q172.70-70.40 178.55-71.60Q184.40-72.80 191-72.80L191-72.80Q201.90-72.80 210.55-69.80Q219.20-66.80 224.70-61.35Q230.20-55.90 231.60-48.60L231.60-48.60L220.80-48.60Q219.40-53.50 215.20-57.15Q211-60.80 204.80-62.80Q198.60-64.80 191-64.80L191-64.80Q185.90-64.80 181.40-63.90Q176.90-63 173.20-61.25Q169.50-59.50 166.60-57Q163.70-54.50 161.75-51.25Q159.80-48 158.75-44.10Q157.70-40.20 157.70-35.70L157.70-35.70Q157.70-26.70 161.75-20.20Q165.80-13.70 173.25-10.15Q180.70-6.60 191-6.60L191-6.60Q198.50-6.60 204.65-8.60Q210.80-10.60 215-14.25Q219.20-17.90 220.70-22.80L220.70-22.80L231.60-22.80Q230.20-15.50 224.65-10.05Q219.10-4.60 210.45-1.60Q201.80 1.40 191 1.40Z M313 0L303.10 0L303.10-71.40L313-71.40L313 0Z M427.20-26L388.70-26L388.70-34L427.20-34L427.20-26Z M512.90 0L502.90 0L502.90-71.40L549.50-71.40Q554.60-71.40 558.90-70.05Q563.20-68.70 566.35-66Q569.50-63.30 571.25-59.30Q573-55.30 573-50.10L573-50.10Q573-44.90 571.25-40.90Q569.50-36.90 566.35-34.20Q563.20-31.50 558.90-30.15Q554.60-28.80 549.50-28.80L549.50-28.80L512.90-28.80L512.90 0ZM512.90-63.40L512.90-36.80L548.20-36.80Q552.80-36.80 556-38.40Q559.20-40 560.85-43Q562.50-46 562.50-50.10L562.50-50.10Q562.50-56.30 558.80-59.85Q555.10-63.40 548.20-63.40L548.20-63.40L512.90-63.40Z M654.60 0L644.70 0L644.70-71.40L654.60-71.40L654.60 0Z M793.90 0L729.60 0L729.60-71.40L793.90-71.40L793.90-63.40L739.60-63.40L739.60-40.50L789.80-40.50L789.80-32.70L739.60-32.70L739.60-8L793.90-8L793.90 0Z" fill="#C6CCD2"/>
+  </svg>
+
+</div>
+
+<script>
+(function() {
+  const CX = 617, CY = 473.5, RX = 613.5, RY = 285;
+  const NS = 'http://www.w3.org/2000/svg';
+  const backG = document.getElementById('back-planets');
+  const frontG = document.getElementById('front-planets');
+  const backParticlesG = document.getElementById('back-particles');
+  const frontParticlesG = document.getElementById('front-particles');
+  const logoSvg = document.getElementById('logo');
+  const logoWrap = document.getElementById('logoWrap');
+
+  const BASE_SPEED = 0.5;
+  const HOVER_BOOST = 2.8;
+  const LERP_SPEED = 4.0;
+  const PLANET_COLOR = '#F0EC8F';
+  const PLANET_R = 49;
+
+  let angles = [0, (2 * Math.PI) / 3, (4 * Math.PI) / 3];
+  let isHovering = false;
+  let trailFade = 0; // 1 = full trails, decays to 0 after unhover
+  let speedMultiplier = 1.0;
+
+  const BACK_START = Math.PI * 0.82;
+  const BACK_END = Math.PI * 1.97;
+
+  function norm(a) { return ((a % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI); }
+  function isBack(a) { const v = norm(a); return v > BACK_START && v < BACK_END; }
+
+  // ── Particle trail system — z-sorted like planets ──
+  const MAX_PARTICLES = 600;
+  const particles = [];
+
+  function spawnParticle(x, y, angle, fadeSpeed) {
+    particles.push({ x, y, angle, life: 1.0, r: 3 + Math.random() * 5, fadeSpeed });
+    if (particles.length > MAX_PARTICLES) particles.shift();
+  }
+
+  function updateParticles(dt) {
+    for (let i = particles.length - 1; i >= 0; i--) {
+      particles[i].life -= dt * particles[i].fadeSpeed;
+      if (particles[i].life <= 0) particles.splice(i, 1);
+    }
+  }
+
+  function renderParticles() {
+    while (backParticlesG.firstChild) backParticlesG.removeChild(backParticlesG.firstChild);
+    while (frontParticlesG.firstChild) frontParticlesG.removeChild(frontParticlesG.firstChild);
+    for (const p of particles) {
+      const c = document.createElementNS(NS, 'circle');
+      c.setAttribute('cx', p.x);
+      c.setAttribute('cy', p.y);
+      c.setAttribute('r', (p.r * p.life).toFixed(1));
+      const color = window.__sunColor || PLANET_COLOR;
+      c.setAttribute('fill', color);
+      c.setAttribute('opacity', (0.45 * p.life).toFixed(3));
+      // Same z-sort as planets
+      if (isBack(p.angle)) {
+        backParticlesG.appendChild(c);
+      } else {
+        frontParticlesG.appendChild(c);
+      }
+    }
+  }
+
+  // ── Planet rendering ──
+  function renderPlanets(container, planetList) {
+    while (container.firstChild) container.removeChild(container.firstChild);
+    const color = window.__sunColor || PLANET_COLOR;
+    for (const p of planetList) {
+      const c = document.createElementNS(NS, 'circle');
+      c.setAttribute('cx', p.x.toFixed(1));
+      c.setAttribute('cy', p.y.toFixed(1));
+      c.setAttribute('r', PLANET_R);
+      c.setAttribute('fill', color);
+      c.setAttribute('filter', 'url(#planetGlow)');
+      container.appendChild(c);
+    }
+  }
+
+  // ── Parallax ──
+  let mouseX = 0, mouseY = 0, smoothMX = 0, smoothMY = 0;
+  document.addEventListener('mousemove', e => {
+    const rect = logoWrap.getBoundingClientRect();
+    mouseX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+    mouseY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+  });
+
+  // ── Drag-to-spin ──
+  let isDragging = false, dragStartX = 0, dragVelocity = 0;
+  logoSvg.addEventListener('mousedown', e => { isDragging = true; dragStartX = e.clientX; e.preventDefault(); });
+  document.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    dragVelocity = (e.clientX - dragStartX) * 0.0003;
+    dragStartX = e.clientX;
+  });
+  document.addEventListener('mouseup', () => { isDragging = false; });
+  logoSvg.addEventListener('touchstart', e => { isDragging = true; dragStartX = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchmove', e => {
+    if (!isDragging) return;
+    dragVelocity = (e.touches[0].clientX - dragStartX) * 0.0003;
+    dragStartX = e.touches[0].clientX;
+  }, { passive: true });
+  document.addEventListener('touchend', () => { isDragging = false; });
+
+  // ── Hover: spring physics for cake piece displacement ──
+  // Use animationend event to reliably know when CSS entrance is done
+  const entranceDone = { tl: false, tr: false, bl: false, br: false };
+
+  const CENTER_X = 580, CENTER_Y = 440, DIST = 20;
+  const centroids = {
+    bl: { x: 330, y: 610 },
+    br: { x: 770, y: 750 },
+    tr: { x: 870, y: 280 },
+    tl: { x: 430, y: 250 }
+  };
+
+  const springs = {};
+  const trBite = document.getElementById('tr-bite');
+  const trBiteLight = document.getElementById('tr-bite-light');
+  const trNobite = document.getElementById('tr-nobite');
+  const trNobiteLight = document.getElementById('tr-nobite-light');
+
+  document.querySelectorAll('.cake-piece').forEach(g => {
+    const key = g.dataset.piece;
+    const c = centroids[key];
+    const dx = c.x - CENTER_X, dy = c.y - CENTER_Y;
+    const len = Math.sqrt(dx * dx + dy * dy);
+
+    springs[key] = {
+      targetX: (dx / len) * DIST, targetY: (dy / len) * DIST,
+      cx: 0, cy: 0, vx: 0, vy: 0,
+      hovered: false, el: g
+    };
+
+    g.addEventListener('animationend', () => {
+      entranceDone[key] = true;
+      g.style.animation = 'none';
+      g.style.opacity = '1';
+      g.style.transform = 'translate(0, 0)';
+    });
+
+    g.addEventListener('mouseenter', () => {
+      springs[key].hovered = true;
+      isHovering = true;
+      if (key === 'tr') {
+        trBite.style.display = ''; trBiteLight.style.display = '';
+        trNobite.style.display = 'none'; trNobiteLight.style.display = 'none';
+      }
+    });
+    g.addEventListener('mouseleave', () => {
+      springs[key].hovered = false;
+      isHovering = false;
+      if (key === 'tr') {
+        trBite.style.display = 'none'; trBiteLight.style.display = 'none';
+        trNobite.style.display = ''; trNobiteLight.style.display = '';
+      }
+    });
+  });
+
+  function updateAndApplySprings(dt) {
+    const stiffness = 220, damping = 22;
+    for (const key in springs) {
+      if (!entranceDone[key]) continue; // CSS still animating — hands off
+
+      const s = springs[key];
+      const tx = s.hovered ? s.targetX : 0;
+      const ty = s.hovered ? s.targetY : 0;
+      const fx = stiffness * (tx - s.cx) - damping * s.vx;
+      const fy = stiffness * (ty - s.cy) - damping * s.vy;
+      s.vx += fx * dt; s.vy += fy * dt;
+      s.cx += s.vx * dt; s.cy += s.vy * dt;
+      s.el.style.transform = `translate(${s.cx.toFixed(2)}px, ${s.cy.toFixed(2)}px)`;
+    }
+  }
+
+  // ── Sun reflection lighting ──
+  // Bounding boxes for each piece (approximate) for gradient positioning
+  const pieceBounds = {
+    bl: { x: 161, y: 355, w: 403, h: 518 },
+    br: { x: 502, y: 572, w: 482, h: 349 },
+    tr: { x: 624, y: 0, w: 466, h: 501 },
+    tl: { x: 184, y: 2, w: 539, h: 499 }
+  };
+
+  function updateLighting(frontPlanets) {
+    const pieces = ['bl', 'br', 'tl', 'tr'];
+    const reflMult = window.__reflectionIntensity || 1.0;
+    const LIGHT_RANGE = 450;
+    const MAX_OPACITY = 0.25 * reflMult;
+    const MAX_OPACITY_TR = 0.35 * reflMult;
+
+    for (const key of pieces) {
+      const grad = document.getElementById('light-' + key);
+      if (!grad) continue;
+      const b = pieceBounds[key];
+      const cx = b.x + b.w / 2, cy = b.y + b.h / 2;
+
+      // Find closest front planet
+      let bestDist = Infinity, bestPx = cx, bestPy = cy;
+      for (const p of frontPlanets) {
+        const dx = p.x - cx, dy = p.y - cy;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < bestDist) { bestDist = dist; bestPx = p.x; bestPy = p.y; }
+      }
+
+      // Intensity falls off with distance
+      const intensity = Math.max(0, 1 - bestDist / LIGHT_RANGE);
+      const peakOpacity = key === 'tr' ? MAX_OPACITY_TR : MAX_OPACITY;
+      const opacity = (intensity * intensity * peakOpacity).toFixed(3); // quadratic falloff
+
+      // Position gradient center relative to piece bounding box (0-1)
+      const gx = Math.max(0, Math.min(1, (bestPx - b.x) / b.w));
+      const gy = Math.max(0, Math.min(1, (bestPy - b.y) / b.h));
+
+      grad.setAttribute('cx', gx.toFixed(3));
+      grad.setAttribute('cy', gy.toFixed(3));
+      grad.children[0].setAttribute('stop-opacity', opacity);
+      grad.children[1].setAttribute('stop-opacity', '0');
+    }
+  }
+
+  // ── Main loop ──
+  let lastTime = null;
+
+  function animate(ts) {
+    if (!lastTime) lastTime = ts;
+    const dt = Math.min((ts - lastTime) / 1000, 0.05);
+    lastTime = ts;
+
+    // Parallax
+    smoothMX += (mouseX - smoothMX) * Math.min(1, 3 * dt);
+    smoothMY += (mouseY - smoothMY) * Math.min(1, 3 * dt);
+    logoSvg.style.transform = `translate(${(smoothMX * 8).toFixed(1)}px, ${(smoothMY * 5).toFixed(1)}px)`;
+
+    // Orbit speed
+    const target = isHovering ? HOVER_BOOST : 1.0;
+    speedMultiplier += (target - speedMultiplier) * Math.min(1, LERP_SPEED * dt);
+    if (!isDragging) dragVelocity *= (1 - 3 * dt);
+
+    // Trail fade: ramp up fast on hover, decay after unhover
+    if (isHovering) {
+      trailFade = Math.min(1, trailFade + dt * 8);
+    } else {
+      trailFade *= (1 - 2.5 * dt);
+      if (trailFade < 0.02) trailFade = 0;
+    }
+
+    const totalSpeed = BASE_SPEED * speedMultiplier + dragVelocity;
+    for (let i = 0; i < 3; i++) angles[i] += totalSpeed * dt;
+
+    // Planets
+    const back = [], front = [];
+    for (let i = 0; i < 3; i++) {
+      const a = angles[i];
+      const p = { x: CX + RX * Math.cos(a), y: CY + RY * Math.sin(a) };
+      if (isBack(a)) back.push(p); else front.push(p);
+
+      // Spawn trails while trailFade > 0
+      // fadeSpeed increases as trailFade drops (later particles die faster)
+      if (trailFade > 0.02) {
+        const fadeSpeed = 0.35 + (1 - trailFade) * 2.5; // 0.35 at full hover, up to ~2.85 at tail end
+        const count = Math.max(1, Math.round(3 * trailFade));
+        for (let j = 0; j < count; j++) {
+          spawnParticle(
+            p.x + (Math.random() - 0.5) * 10,
+            p.y + (Math.random() - 0.5) * 10,
+            a,
+            fadeSpeed
+          );
+        }
+      }
+    }
+    renderPlanets(backG, back);
+    renderPlanets(frontG, front);
+
+    // Lighting — sun reflection on pie pieces
+    updateLighting(front);
+
+    // Particles
+    updateParticles(dt);
+    renderParticles();
+
+    // Springs
+    updateAndApplySprings(dt);
+
+    requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
+})();
+</script>
+<style>
+  .controls {
+    position: fixed;
+    bottom: 0;
+    left: 0; right: 0;
+    padding: 1rem 1.5rem;
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    z-index: 10;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(8px);
+  }
+  .controls .group {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+  }
+  .controls label {
+    color: rgba(255,255,255,0.35);
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-right: 0.2rem;
+    white-space: nowrap;
+  }
+  .controls input[type="color"] {
+    -webkit-appearance: none;
+    border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 50%;
+    width: 26px; height: 26px;
+    padding: 0;
+    cursor: pointer;
+    background: none;
+  }
+  .controls input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+  .controls input[type="color"]::-webkit-color-swatch { border: none; border-radius: 50%; }
+  .controls input[type="color"]::-moz-color-swatch { border: none; border-radius: 50%; }
+  .controls .toggle {
+    border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 4px;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.55rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.05);
+    cursor: pointer;
+  }
+  .controls .toggle.active { color: #d4c44a; border-color: rgba(212,196,74,0.3); background: rgba(212,196,74,0.1); }
+  .controls input[type="range"] {
+    -webkit-appearance: none;
+    width: 60px; height: 4px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+  .controls input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: #d4c44a;
+    cursor: pointer;
+  }
+  .controls .copy-btn {
+    border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 4px;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.55rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.05);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .controls .copy-btn:hover { border-color: rgba(255,255,255,0.4); color: rgba(255,255,255,0.7); }
+  .controls .copy-btn.copied { color: #d4c44a; border-color: rgba(212,196,74,0.3); }
+</style>
+
+<div class="controls">
+  <div class="group">
+    <label>Background</label>
+    <input type="color" id="pick-bg" value="#1a1a1e">
+  </div>
+  <div class="group">
+    <label>Pie fill</label>
+    <input type="color" id="pick-pie" value="#1a1a1e">
+  </div>
+  <div class="group">
+    <label>Border</label>
+    <input type="color" id="pick-border" value="#C6CCD2">
+    <button class="toggle active" id="borderToggle">ON</button>
+  </div>
+  <div class="group">
+    <label>Accent fill</label>
+    <input type="color" id="pick-accent" value="#d4c44a">
+  </div>
+  <div class="group">
+    <label>Suns</label>
+    <input type="color" id="pick-suns" value="#F0EC8F">
+  </div>
+  <div class="group">
+    <label>Text</label>
+    <input type="color" id="pick-text" value="#C6CCD2">
+  </div>
+  <div class="group">
+    <label>Reflection</label>
+    <input type="range" id="reflectionSlider" min="0" max="200" value="100">
+  </div>
+  <div class="group">
+    <button class="copy-btn" id="copyPalette">📋 Copy</button>
+    <button class="copy-btn" id="loadPalette">📥 Load</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  // Elements
+  const greyPieces = document.querySelectorAll(
+    '[data-piece="bl"] path:first-child, [data-piece="br"] path:first-child, [data-piece="tl"] path:first-child'
+  );
+  const accentPieces = document.querySelectorAll('#tr-nobite, #tr-bite');
+  const wordmark = document.querySelector('.wordmark path');
+  const lightGrads = ['light-bl', 'light-br', 'light-tl', 'light-tr'].map(id => document.getElementById(id));
+
+  let bordersOn = true;
+  let pieFill = '#1a1a1e';
+  let borderColor = '#C6CCD2';
+  let sunColor = '#F0EC8F';
+
+  const pickBg = document.getElementById('pick-bg');
+  const pickPie = document.getElementById('pick-pie');
+  const pickBorder = document.getElementById('pick-border');
+  const pickAccent = document.getElementById('pick-accent');
+  const pickSuns = document.getElementById('pick-suns');
+  const pickText = document.getElementById('pick-text');
+  const borderToggle = document.getElementById('borderToggle');
+  const reflectionSlider = document.getElementById('reflectionSlider');
+  const copyBtn = document.getElementById('copyPalette');
+  const loadBtn = document.getElementById('loadPalette');
+
+  function applyGreyPieces() {
+    greyPieces.forEach(p => {
+      p.setAttribute('fill', pieFill);
+      p.setAttribute('stroke', bordersOn ? borderColor : pieFill);
+    });
+  }
+
+  pickBg.addEventListener('input', e => {
+    document.documentElement.style.setProperty('--bg', e.target.value);
+  });
+
+  pickPie.addEventListener('input', e => {
+    pieFill = e.target.value;
+    applyGreyPieces();
+  });
+
+  pickBorder.addEventListener('input', e => {
+    borderColor = e.target.value;
+    applyGreyPieces();
+  });
+
+  pickAccent.addEventListener('input', e => {
+    const c = e.target.value;
+    accentPieces.forEach(p => {
+      p.setAttribute('fill', c);
+      p.setAttribute('stroke', c);
+    });
+  });
+
+  pickSuns.addEventListener('input', e => {
+    sunColor = e.target.value;
+    window.__sunColor = sunColor;
+    lightGrads.forEach(g => {
+      if (g) {
+        g.children[0].setAttribute('stop-color', sunColor);
+        g.children[1].setAttribute('stop-color', sunColor);
+      }
+    });
+  });
+
+  pickText.addEventListener('input', e => {
+    wordmark.setAttribute('fill', e.target.value);
+  });
+
+  borderToggle.addEventListener('click', () => {
+    bordersOn = !bordersOn;
+    borderToggle.textContent = bordersOn ? 'ON' : 'OFF';
+    borderToggle.classList.toggle('active', bordersOn);
+    applyGreyPieces();
+  });
+
+  // Reflection intensity: 0-200, default 100 = 1x
+  reflectionSlider.addEventListener('input', e => {
+    window.__reflectionIntensity = parseInt(e.target.value) / 100;
+  });
+  window.__reflectionIntensity = 1.0;
+
+  // Copy palette as JSON string
+  copyBtn.addEventListener('click', () => {
+    const palette = {
+      bg: pickBg.value,
+      pie: pickPie.value,
+      border: pickBorder.value,
+      borderOn: bordersOn,
+      accent: pickAccent.value,
+      suns: pickSuns.value,
+      text: pickText.value,
+      reflection: parseInt(reflectionSlider.value)
+    };
+    const str = JSON.stringify(palette);
+    navigator.clipboard.writeText(str).then(() => {
+      copyBtn.textContent = '✓ Copied';
+      copyBtn.classList.add('copied');
+      setTimeout(() => { copyBtn.textContent = '📋 Copy'; copyBtn.classList.remove('copied'); }, 1500);
+    });
+  });
+
+  // Load palette from clipboard
+  loadBtn.addEventListener('click', async () => {
+    try {
+      const str = await navigator.clipboard.readText();
+      const p = JSON.parse(str);
+
+      if (p.bg) { pickBg.value = p.bg; pickBg.dispatchEvent(new Event('input')); }
+      if (p.pie) { pickPie.value = p.pie; pieFill = p.pie; applyGreyPieces(); }
+      if (p.border) { pickBorder.value = p.border; borderColor = p.border; applyGreyPieces(); }
+      if (p.borderOn !== undefined) { bordersOn = p.borderOn; borderToggle.textContent = bordersOn ? 'ON' : 'OFF'; borderToggle.classList.toggle('active', bordersOn); applyGreyPieces(); }
+      if (p.accent) { pickAccent.value = p.accent; accentPieces.forEach(el => { el.setAttribute('fill', p.accent); el.setAttribute('stroke', p.accent); }); }
+      if (p.suns) { pickSuns.value = p.suns; sunColor = p.suns; window.__sunColor = sunColor; lightGrads.forEach(g => { if(g){ g.children[0].setAttribute('stop-color',sunColor); g.children[1].setAttribute('stop-color',sunColor); }}); }
+      if (p.text) { pickText.value = p.text; wordmark.setAttribute('fill', p.text); }
+      if (p.reflection !== undefined) { reflectionSlider.value = p.reflection; window.__reflectionIntensity = p.reflection / 100; }
+
+      loadBtn.textContent = '✓ Loaded';
+      setTimeout(() => { loadBtn.textContent = '📥 Load'; }, 1500);
+    } catch(e) {
+      loadBtn.textContent = '✗ Error';
+      setTimeout(() => { loadBtn.textContent = '📥 Load'; }, 1500);
+    }
+  });
+
+  window.__sunColor = sunColor;
+})();
+</script>
+</body>
+</html>
