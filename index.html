@@ -98,6 +98,10 @@
             fill="url(#light-br)" fill-rule="evenodd" pointer-events="none"/>
     </g>
 
+    <!-- Orbit (off by default) -->
+    <ellipse id="el-orbit" cx="617" cy="473.5" rx="613.5" ry="285"
+             stroke="#ECE76A" stroke-width="1.5" fill="none" opacity="0" pointer-events="none"/>
+
     <!-- Top cake -->
     <g class="cake-piece" data-piece="tr">
       <path id="tr-nobite" d="M911.230 0.195 933.570 17.470C1061.890 127.284 1128.400 304.644 1092.070 485.948L1089.200 497.352 624.430 500.991Z"
@@ -182,6 +186,7 @@
       const color = window.__sunColor || PLANET_COLOR;
       c.setAttribute('fill', color);
       c.setAttribute('opacity', (0.45 * p.life).toFixed(3));
+      c.setAttribute('pointer-events', 'none');
       // Same z-sort as planets
       if (isBack(p.angle)) {
         backParticlesG.appendChild(c);
@@ -202,6 +207,7 @@
       c.setAttribute('r', PLANET_R);
       c.setAttribute('fill', color);
       c.setAttribute('filter', 'url(#planetGlow)');
+      c.setAttribute('pointer-events', 'none');
       container.appendChild(c);
     }
   }
@@ -367,11 +373,16 @@
     if (!isDragging) dragVelocity *= (1 - 3 * dt);
 
     // Trail fade: ramp up fast on hover, decay after unhover
-    if (isHovering) {
-      trailFade = Math.min(1, trailFade + dt * 8);
+    const trailsOn = window.__trailsEnabled;
+    if (trailsOn) {
+      if (isHovering) {
+        trailFade = Math.min(1, trailFade + dt * 8);
+      } else {
+        trailFade *= (1 - 2.5 * dt);
+        if (trailFade < 0.02) trailFade = 0;
+      }
     } else {
-      trailFade *= (1 - 2.5 * dt);
-      if (trailFade < 0.02) trailFade = 0;
+      trailFade = 0;
     }
 
     const totalSpeed = BASE_SPEED * speedMultiplier + dragVelocity;
@@ -384,10 +395,8 @@
       const p = { x: CX + RX * Math.cos(a), y: CY + RY * Math.sin(a) };
       if (isBack(a)) back.push(p); else front.push(p);
 
-      // Spawn trails while trailFade > 0
-      // fadeSpeed increases as trailFade drops (later particles die faster)
-      if (trailFade > 0.02) {
-        const fadeSpeed = 0.35 + (1 - trailFade) * 2.5; // 0.35 at full hover, up to ~2.85 at tail end
+      if (trailsOn && trailFade > 0.02) {
+        const fadeSpeed = 0.35 + (1 - trailFade) * 2.5;
         const count = Math.max(1, Math.round(3 * trailFade));
         for (let j = 0; j < count; j++) {
           spawnParticle(
@@ -406,8 +415,15 @@
     updateLighting(front);
 
     // Particles
-    updateParticles(dt);
-    renderParticles();
+    if (trailsOn) {
+      updateParticles(dt);
+      renderParticles();
+    } else if (particles.length > 0) {
+      // Clear any remaining particles when disabled
+      particles.length = 0;
+      while (backParticlesG.firstChild) backParticlesG.removeChild(backParticlesG.firstChild);
+      while (frontParticlesG.firstChild) frontParticlesG.removeChild(frontParticlesG.firstChild);
+    }
 
     // Springs
     updateAndApplySprings(dt);
@@ -532,6 +548,16 @@
     <input type="range" id="reflectionSlider" min="0" max="200" value="191">
   </div>
   <div class="group">
+    <label>Trails</label>
+    <button class="toggle active" id="trailsToggle">ON</button>
+  </div>
+  <div class="group">
+    <label>Orbit</label>
+    <button class="toggle" id="orbitToggle">OFF</button>
+    <input type="color" id="pick-orbit" value="#ECE76A">
+    <input type="range" id="orbitWidth" min="1" max="10" value="2" style="width:40px;">
+  </div>
+  <div class="group">
     <button class="copy-btn" id="copyPalette">📋 Copy</button>
     <button class="copy-btn" id="loadPalette">📥 Load</button>
   </div>
@@ -619,6 +645,37 @@
     window.__reflectionIntensity = parseInt(e.target.value) / 100;
   });
   window.__reflectionIntensity = 1.91;
+  window.__trailsEnabled = true;
+
+  // Trails toggle
+  const trailsToggle = document.getElementById('trailsToggle');
+  trailsToggle.addEventListener('click', () => {
+    window.__trailsEnabled = !window.__trailsEnabled;
+    trailsToggle.textContent = window.__trailsEnabled ? 'ON' : 'OFF';
+    trailsToggle.classList.toggle('active', window.__trailsEnabled);
+  });
+
+  // Orbit controls
+  const orbitEl = document.getElementById('el-orbit');
+  const orbitToggle = document.getElementById('orbitToggle');
+  const pickOrbit = document.getElementById('pick-orbit');
+  const orbitWidthSlider = document.getElementById('orbitWidth');
+  let orbitOn = false;
+
+  orbitToggle.addEventListener('click', () => {
+    orbitOn = !orbitOn;
+    orbitToggle.textContent = orbitOn ? 'ON' : 'OFF';
+    orbitToggle.classList.toggle('active', orbitOn);
+    orbitEl.setAttribute('opacity', orbitOn ? '0.25' : '0');
+  });
+
+  pickOrbit.addEventListener('input', e => {
+    orbitEl.setAttribute('stroke', e.target.value);
+  });
+
+  orbitWidthSlider.addEventListener('input', e => {
+    orbitEl.setAttribute('stroke-width', e.target.value);
+  });
 
   // Copy palette as JSON string
   copyBtn.addEventListener('click', () => {
@@ -630,7 +687,11 @@
       accent: pickAccent.value,
       suns: pickSuns.value,
       text: pickText.value,
-      reflection: parseInt(reflectionSlider.value)
+      reflection: parseInt(reflectionSlider.value),
+      trails: window.__trailsEnabled,
+      orbitOn: orbitOn,
+      orbitColor: pickOrbit.value,
+      orbitWidth: parseInt(orbitWidthSlider.value)
     };
     const str = JSON.stringify(palette);
     navigator.clipboard.writeText(str).then(() => {
@@ -654,6 +715,10 @@
       if (p.suns) { pickSuns.value = p.suns; sunColor = p.suns; window.__sunColor = sunColor; lightGrads.forEach(g => { if(g){ g.children[0].setAttribute('stop-color',sunColor); g.children[1].setAttribute('stop-color',sunColor); }}); }
       if (p.text) { pickText.value = p.text; wordmark.setAttribute('fill', p.text); }
       if (p.reflection !== undefined) { reflectionSlider.value = p.reflection; window.__reflectionIntensity = p.reflection / 100; }
+      if (p.trails !== undefined) { window.__trailsEnabled = p.trails; trailsToggle.textContent = p.trails ? 'ON' : 'OFF'; trailsToggle.classList.toggle('active', p.trails); }
+      if (p.orbitOn !== undefined) { orbitOn = p.orbitOn; orbitToggle.textContent = orbitOn ? 'ON' : 'OFF'; orbitToggle.classList.toggle('active', orbitOn); orbitEl.setAttribute('opacity', orbitOn ? '0.25' : '0'); }
+      if (p.orbitColor) { pickOrbit.value = p.orbitColor; orbitEl.setAttribute('stroke', p.orbitColor); }
+      if (p.orbitWidth !== undefined) { orbitWidthSlider.value = p.orbitWidth; orbitEl.setAttribute('stroke-width', p.orbitWidth); }
 
       loadBtn.textContent = '✓ Loaded';
       setTimeout(() => { loadBtn.textContent = '📥 Load'; }, 1500);
