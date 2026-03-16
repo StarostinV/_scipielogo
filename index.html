@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- palette: {"bg":"#2c2a2a","pie":"#404045","border":"#c6ccd2","borderOn":false,"accent":"#f3eaaa","suns":"#fffee5","text":"#f0eda8","reflection":191} -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -6,7 +7,7 @@
 <title>SCI-PIE — Animated Logo</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  :root { --bg: #1a1a1e; }
+  :root { --bg: #2c2a2a; }
   body {
     display: flex;
     justify-content: center;
@@ -62,20 +63,20 @@
       </filter>
       <!-- Per-piece radial gradient for sun reflection — updated dynamically in JS -->
       <radialGradient id="light-bl" cx="0.5" cy="0.5" r="0.6" gradientUnits="objectBoundingBox">
-        <stop offset="0%" stop-color="#F0EC8F" stop-opacity="0"/>
-        <stop offset="100%" stop-color="#F0EC8F" stop-opacity="0"/>
+        <stop offset="0%" stop-color="#fffee5" stop-opacity="0"/>
+        <stop offset="100%" stop-color="#fffee5" stop-opacity="0"/>
       </radialGradient>
       <radialGradient id="light-br" cx="0.5" cy="0.5" r="0.6" gradientUnits="objectBoundingBox">
-        <stop offset="0%" stop-color="#F0EC8F" stop-opacity="0"/>
-        <stop offset="100%" stop-color="#F0EC8F" stop-opacity="0"/>
+        <stop offset="0%" stop-color="#fffee5" stop-opacity="0"/>
+        <stop offset="100%" stop-color="#fffee5" stop-opacity="0"/>
       </radialGradient>
       <radialGradient id="light-tl" cx="0.5" cy="0.5" r="0.6" gradientUnits="objectBoundingBox">
-        <stop offset="0%" stop-color="#F0EC8F" stop-opacity="0"/>
-        <stop offset="100%" stop-color="#F0EC8F" stop-opacity="0"/>
+        <stop offset="0%" stop-color="#fffee5" stop-opacity="0"/>
+        <stop offset="100%" stop-color="#fffee5" stop-opacity="0"/>
       </radialGradient>
       <radialGradient id="light-tr" cx="0.5" cy="0.5" r="0.6" gradientUnits="objectBoundingBox">
-        <stop offset="0%" stop-color="#F0EC8F" stop-opacity="0"/>
-        <stop offset="100%" stop-color="#F0EC8F" stop-opacity="0"/>
+        <stop offset="0%" stop-color="#fffee5" stop-opacity="0"/>
+        <stop offset="100%" stop-color="#fffee5" stop-opacity="0"/>
       </radialGradient>
     </defs>
 
@@ -86,13 +87,13 @@
     <!-- Bottom cake — solid fill + wireframe stroke + lighting overlay -->
     <g class="cake-piece" data-piece="bl">
       <path d="M173.590 355.000 564.000 533.946 416.360 873.000 401.960 866.050C258.430 787.960 161.000 635.641 161.000 460.531 161.000 428.693 164.220 397.609 170.350 367.587Z"
-            fill="#1a1a1e" stroke="#C6CCD2" stroke-width="8" stroke-linejoin="round" fill-rule="evenodd"/>
+            fill="#404045" stroke="#404045" stroke-width="8" stroke-linejoin="round" fill-rule="evenodd"/>
       <path d="M173.590 355.000 564.000 533.946 416.360 873.000 401.960 866.050C258.430 787.960 161.000 635.641 161.000 460.531 161.000 428.693 164.220 397.609 170.350 367.587Z"
             fill="url(#light-bl)" fill-rule="evenodd" pointer-events="none"/>
     </g>
     <g class="cake-piece" data-piece="br">
       <path d="M642.690 572.000 984.000 738.900 972.850 753.750C888.230 855.890 760.170 921.000 616.850 921.000 585.000 921.000 553.900 917.780 523.870 911.660L502.000 906.060Z"
-            fill="#1a1a1e" stroke="#C6CCD2" stroke-width="8" stroke-linejoin="round" fill-rule="evenodd"/>
+            fill="#404045" stroke="#404045" stroke-width="8" stroke-linejoin="round" fill-rule="evenodd"/>
       <path d="M642.690 572.000 984.000 738.900 972.850 753.750C888.230 855.890 760.170 921.000 616.850 921.000 585.000 921.000 553.900 917.780 523.870 911.660L502.000 906.060Z"
             fill="url(#light-br)" fill-rule="evenodd" pointer-events="none"/>
     </g>
@@ -100,17 +101,17 @@
     <!-- Top cake -->
     <g class="cake-piece" data-piece="tr">
       <path id="tr-nobite" d="M911.230 0.195 933.570 17.470C1061.890 127.284 1128.400 304.644 1092.070 485.948L1089.200 497.352 624.430 500.991Z"
-            fill="#d4c44a" stroke="#d4c44a" stroke-width="8" stroke-linejoin="round" fill-rule="evenodd"/>
+            fill="#f3eaaa" stroke="#f3eaaa" stroke-width="8" stroke-linejoin="round" fill-rule="evenodd"/>
       <path id="tr-nobite-light" d="M911.230 0.195 933.570 17.470C1061.890 127.284 1128.400 304.644 1092.070 485.948L1089.200 497.352 624.430 500.991Z"
             fill="url(#light-tr)" fill-rule="evenodd" pointer-events="none"/>
       <path id="tr-bite" d="M910.970 0.817 933.310 18.092C1061.630 127.905 1128.140 305.265 1091.820 486.570L1088.950 497.974 680.640 501.170 684.710 499.187 667.550 479.761 686.630 464.229 662.360 450.049 684.520 422.970 670.560 420.624Z"
-            fill="#d4c44a" stroke="#d4c44a" stroke-width="8" stroke-linejoin="round" fill-rule="evenodd" style="display:none;"/>
+            fill="#f3eaaa" stroke="#f3eaaa" stroke-width="8" stroke-linejoin="round" fill-rule="evenodd" style="display:none;"/>
       <path id="tr-bite-light" d="M910.970 0.817 933.310 18.092C1061.630 127.905 1128.140 305.265 1091.820 486.570L1088.950 497.974 680.640 501.170 684.710 499.187 667.550 479.761 686.630 464.229 662.360 450.049 684.520 422.970 670.560 420.624Z"
             fill="url(#light-tr)" fill-rule="evenodd" pointer-events="none" style="display:none;"/>
     </g>
     <g class="cake-piece" data-piece="tl">
       <path d="M603.160 2.000C633.610 2.000 663.340 5.188 692.060 11.258L723.000 19.476 578.130 501.000 184.000 316.180 196.710 280.305C263.680 116.757 420.440 2.000 603.160 2.000Z"
-            fill="#1a1a1e" stroke="#C6CCD2" stroke-width="8" stroke-linejoin="round" fill-rule="evenodd"/>
+            fill="#404045" stroke="#404045" stroke-width="8" stroke-linejoin="round" fill-rule="evenodd"/>
       <path d="M603.160 2.000C633.610 2.000 663.340 5.188 692.060 11.258L723.000 19.476 578.130 501.000 184.000 316.180 196.710 280.305C263.680 116.757 420.440 2.000 603.160 2.000Z"
             fill="url(#light-tl)" fill-rule="evenodd" pointer-events="none"/>
     </g>
@@ -121,7 +122,7 @@
   </svg>
 
   <svg class="wordmark" xmlns="http://www.w3.org/2000/svg" viewBox="-2 -74.8 804 78.2">
-    <path d="M42.50 1.40L42.50 1.40Q32.30 1.40 25.10-0.45Q17.90-2.30 13.40-5.50Q8.90-8.70 6.70-12.80Q4.50-16.90 4.20-21.40L4.20-21.40L14.50-21.40Q15.10-18.30 16.85-15.65Q18.60-13 21.85-10.95Q25.10-8.90 30.20-7.75Q35.30-6.60 42.50-6.60L42.50-6.60Q51.10-6.60 56.90-8.05Q62.70-9.50 65.60-12.45Q68.50-15.40 68.50-19.80L68.50-19.80Q68.50-22.50 67.10-24.70Q65.70-26.90 62.55-28.45Q59.40-30 54.10-30.70L54.10-30.70L31.60-33.70Q26.70-34.40 22.20-35.60Q17.70-36.80 14.15-38.95Q10.60-41.10 8.60-44.50Q6.60-47.90 6.60-52.90L6.60-52.90Q6.60-57.50 8.90-61.15Q11.20-64.80 15.65-67.40Q20.10-70 26.60-71.40Q33.10-72.80 41.50-72.80L41.50-72.80Q50.80-72.80 57.25-71.15Q63.70-69.50 67.70-66.60Q71.70-63.70 73.65-60.05Q75.60-56.40 75.80-52.40L75.80-52.40L65.50-52.40Q65-56 62.45-58.80Q59.90-61.60 54.80-63.20Q49.70-64.80 41.30-64.80L41.30-64.80Q33.20-64.80 27.75-63.40Q22.30-62 19.60-59.40Q16.90-56.80 16.90-53.20L16.90-53.20Q16.90-50 18.80-47.80Q20.70-45.60 24.25-44.25Q27.80-42.90 32.90-42.20L32.90-42.20L56.50-39.10Q63.20-38.30 68.20-36.05Q73.20-33.80 76.05-29.95Q78.90-26.10 78.90-20.30L78.90-20.30Q78.90-14.90 76.55-10.85Q74.20-6.80 69.55-4.10Q64.90-1.40 58.15 0Q51.40 1.40 42.50 1.40Z M191 1.40L191 1.40Q177.80 1.40 167.95-3.20Q158.10-7.80 152.65-16.15Q147.20-24.50 147.20-35.70L147.20-35.70Q147.20-41.30 148.60-46.25Q150-51.20 152.65-55.30Q155.30-59.40 159.15-62.65Q163-65.90 167.85-68.15Q172.70-70.40 178.55-71.60Q184.40-72.80 191-72.80L191-72.80Q201.90-72.80 210.55-69.80Q219.20-66.80 224.70-61.35Q230.20-55.90 231.60-48.60L231.60-48.60L220.80-48.60Q219.40-53.50 215.20-57.15Q211-60.80 204.80-62.80Q198.60-64.80 191-64.80L191-64.80Q185.90-64.80 181.40-63.90Q176.90-63 173.20-61.25Q169.50-59.50 166.60-57Q163.70-54.50 161.75-51.25Q159.80-48 158.75-44.10Q157.70-40.20 157.70-35.70L157.70-35.70Q157.70-26.70 161.75-20.20Q165.80-13.70 173.25-10.15Q180.70-6.60 191-6.60L191-6.60Q198.50-6.60 204.65-8.60Q210.80-10.60 215-14.25Q219.20-17.90 220.70-22.80L220.70-22.80L231.60-22.80Q230.20-15.50 224.65-10.05Q219.10-4.60 210.45-1.60Q201.80 1.40 191 1.40Z M313 0L303.10 0L303.10-71.40L313-71.40L313 0Z M427.20-26L388.70-26L388.70-34L427.20-34L427.20-26Z M512.90 0L502.90 0L502.90-71.40L549.50-71.40Q554.60-71.40 558.90-70.05Q563.20-68.70 566.35-66Q569.50-63.30 571.25-59.30Q573-55.30 573-50.10L573-50.10Q573-44.90 571.25-40.90Q569.50-36.90 566.35-34.20Q563.20-31.50 558.90-30.15Q554.60-28.80 549.50-28.80L549.50-28.80L512.90-28.80L512.90 0ZM512.90-63.40L512.90-36.80L548.20-36.80Q552.80-36.80 556-38.40Q559.20-40 560.85-43Q562.50-46 562.50-50.10L562.50-50.10Q562.50-56.30 558.80-59.85Q555.10-63.40 548.20-63.40L548.20-63.40L512.90-63.40Z M654.60 0L644.70 0L644.70-71.40L654.60-71.40L654.60 0Z M793.90 0L729.60 0L729.60-71.40L793.90-71.40L793.90-63.40L739.60-63.40L739.60-40.50L789.80-40.50L789.80-32.70L739.60-32.70L739.60-8L793.90-8L793.90 0Z" fill="#C6CCD2"/>
+    <path d="M42.50 1.40L42.50 1.40Q32.30 1.40 25.10-0.45Q17.90-2.30 13.40-5.50Q8.90-8.70 6.70-12.80Q4.50-16.90 4.20-21.40L4.20-21.40L14.50-21.40Q15.10-18.30 16.85-15.65Q18.60-13 21.85-10.95Q25.10-8.90 30.20-7.75Q35.30-6.60 42.50-6.60L42.50-6.60Q51.10-6.60 56.90-8.05Q62.70-9.50 65.60-12.45Q68.50-15.40 68.50-19.80L68.50-19.80Q68.50-22.50 67.10-24.70Q65.70-26.90 62.55-28.45Q59.40-30 54.10-30.70L54.10-30.70L31.60-33.70Q26.70-34.40 22.20-35.60Q17.70-36.80 14.15-38.95Q10.60-41.10 8.60-44.50Q6.60-47.90 6.60-52.90L6.60-52.90Q6.60-57.50 8.90-61.15Q11.20-64.80 15.65-67.40Q20.10-70 26.60-71.40Q33.10-72.80 41.50-72.80L41.50-72.80Q50.80-72.80 57.25-71.15Q63.70-69.50 67.70-66.60Q71.70-63.70 73.65-60.05Q75.60-56.40 75.80-52.40L75.80-52.40L65.50-52.40Q65-56 62.45-58.80Q59.90-61.60 54.80-63.20Q49.70-64.80 41.30-64.80L41.30-64.80Q33.20-64.80 27.75-63.40Q22.30-62 19.60-59.40Q16.90-56.80 16.90-53.20L16.90-53.20Q16.90-50 18.80-47.80Q20.70-45.60 24.25-44.25Q27.80-42.90 32.90-42.20L32.90-42.20L56.50-39.10Q63.20-38.30 68.20-36.05Q73.20-33.80 76.05-29.95Q78.90-26.10 78.90-20.30L78.90-20.30Q78.90-14.90 76.55-10.85Q74.20-6.80 69.55-4.10Q64.90-1.40 58.15 0Q51.40 1.40 42.50 1.40Z M191 1.40L191 1.40Q177.80 1.40 167.95-3.20Q158.10-7.80 152.65-16.15Q147.20-24.50 147.20-35.70L147.20-35.70Q147.20-41.30 148.60-46.25Q150-51.20 152.65-55.30Q155.30-59.40 159.15-62.65Q163-65.90 167.85-68.15Q172.70-70.40 178.55-71.60Q184.40-72.80 191-72.80L191-72.80Q201.90-72.80 210.55-69.80Q219.20-66.80 224.70-61.35Q230.20-55.90 231.60-48.60L231.60-48.60L220.80-48.60Q219.40-53.50 215.20-57.15Q211-60.80 204.80-62.80Q198.60-64.80 191-64.80L191-64.80Q185.90-64.80 181.40-63.90Q176.90-63 173.20-61.25Q169.50-59.50 166.60-57Q163.70-54.50 161.75-51.25Q159.80-48 158.75-44.10Q157.70-40.20 157.70-35.70L157.70-35.70Q157.70-26.70 161.75-20.20Q165.80-13.70 173.25-10.15Q180.70-6.60 191-6.60L191-6.60Q198.50-6.60 204.65-8.60Q210.80-10.60 215-14.25Q219.20-17.90 220.70-22.80L220.70-22.80L231.60-22.80Q230.20-15.50 224.65-10.05Q219.10-4.60 210.45-1.60Q201.80 1.40 191 1.40Z M313 0L303.10 0L303.10-71.40L313-71.40L313 0Z M427.20-26L388.70-26L388.70-34L427.20-34L427.20-26Z M512.90 0L502.90 0L502.90-71.40L549.50-71.40Q554.60-71.40 558.90-70.05Q563.20-68.70 566.35-66Q569.50-63.30 571.25-59.30Q573-55.30 573-50.10L573-50.10Q573-44.90 571.25-40.90Q569.50-36.90 566.35-34.20Q563.20-31.50 558.90-30.15Q554.60-28.80 549.50-28.80L549.50-28.80L512.90-28.80L512.90 0ZM512.90-63.40L512.90-36.80L548.20-36.80Q552.80-36.80 556-38.40Q559.20-40 560.85-43Q562.50-46 562.50-50.10L562.50-50.10Q562.50-56.30 558.80-59.85Q555.10-63.40 548.20-63.40L548.20-63.40L512.90-63.40Z M654.60 0L644.70 0L644.70-71.40L654.60-71.40L654.60 0Z M793.90 0L729.60 0L729.60-71.40L793.90-71.40L793.90-63.40L739.60-63.40L739.60-40.50L789.80-40.50L789.80-32.70L739.60-32.70L739.60-8L793.90-8L793.90 0Z" fill="#f0eda8"/>
   </svg>
 
 </div>
@@ -140,7 +141,7 @@
   const BASE_SPEED = 0.5;
   const HOVER_BOOST = 2.8;
   const LERP_SPEED = 4.0;
-  const PLANET_COLOR = '#F0EC8F';
+  const PLANET_COLOR = '#fffee5';
   const PLANET_R = 49;
 
   let angles = [0, (2 * Math.PI) / 3, (4 * Math.PI) / 3];
@@ -503,32 +504,32 @@
 <div class="controls">
   <div class="group">
     <label>Background</label>
-    <input type="color" id="pick-bg" value="#1a1a1e">
+    <input type="color" id="pick-bg" value="#2c2a2a">
   </div>
   <div class="group">
     <label>Pie fill</label>
-    <input type="color" id="pick-pie" value="#1a1a1e">
+    <input type="color" id="pick-pie" value="#404045">
   </div>
   <div class="group">
     <label>Border</label>
     <input type="color" id="pick-border" value="#C6CCD2">
-    <button class="toggle active" id="borderToggle">ON</button>
+    <button class="toggle" id="borderToggle">OFF</button>
   </div>
   <div class="group">
     <label>Accent fill</label>
-    <input type="color" id="pick-accent" value="#d4c44a">
+    <input type="color" id="pick-accent" value="#f3eaaa">
   </div>
   <div class="group">
     <label>Suns</label>
-    <input type="color" id="pick-suns" value="#F0EC8F">
+    <input type="color" id="pick-suns" value="#fffee5">
   </div>
   <div class="group">
     <label>Text</label>
-    <input type="color" id="pick-text" value="#C6CCD2">
+    <input type="color" id="pick-text" value="#f0eda8">
   </div>
   <div class="group">
     <label>Reflection</label>
-    <input type="range" id="reflectionSlider" min="0" max="200" value="100">
+    <input type="range" id="reflectionSlider" min="0" max="200" value="191">
   </div>
   <div class="group">
     <button class="copy-btn" id="copyPalette">📋 Copy</button>
@@ -546,10 +547,10 @@
   const wordmark = document.querySelector('.wordmark path');
   const lightGrads = ['light-bl', 'light-br', 'light-tl', 'light-tr'].map(id => document.getElementById(id));
 
-  let bordersOn = true;
-  let pieFill = '#1a1a1e';
-  let borderColor = '#C6CCD2';
-  let sunColor = '#F0EC8F';
+  let bordersOn = false;
+  let pieFill = '#404045';
+  let borderColor = '#c6ccd2';
+  let sunColor = '#fffee5';
 
   const pickBg = document.getElementById('pick-bg');
   const pickPie = document.getElementById('pick-pie');
@@ -617,7 +618,7 @@
   reflectionSlider.addEventListener('input', e => {
     window.__reflectionIntensity = parseInt(e.target.value) / 100;
   });
-  window.__reflectionIntensity = 1.0;
+  window.__reflectionIntensity = 1.91;
 
   // Copy palette as JSON string
   copyBtn.addEventListener('click', () => {
